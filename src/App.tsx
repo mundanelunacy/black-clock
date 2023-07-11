@@ -1,23 +1,28 @@
 import { useState, useEffect } from "react";
 
-export const timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+let wakeLock: any = null;
+const screenlock = async () => {
+    if (!("wakeLock" in navigator)) return;
+    if (!("request" in navigator.wakeLock)) return;
+    try {
+        wakeLock = await navigator.wakeLock.request("screen");
+        wakeLock.addEventListener("release", () => {
+            console.log("Screen Wake Lock released:", wakeLock.released);
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+screenlock();
 
 export const App: React.FC<{}> = () => {
     const [time, setTime] = useState(new Date());
 
     useEffect(() => {
-        const requestWakeLock = async () => {
-            if (!("wakeLock" in navigator)) return;
-            if (!("request" in navigator.wakeLock)) return;
-            try {
-                const wakeLock = await navigator.wakeLock.request("screen");
-                wakeLock.addEventListener("release", () => {
-                    console.log("Screen Wake Lock released:", wakeLock.released);
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        };
+        const requestWakeLock = async () => {};
         requestWakeLock();
     }, []);
 
@@ -44,6 +49,7 @@ export const App: React.FC<{}> = () => {
             <div style={{}}>
                 <div style={{ fontSize: "3vw" }}>{time.toLocaleDateString()}</div>
                 <div style={{ fontSize: "10vw" }}>{time.toLocaleTimeString()}</div>
+                {/* <div onClick={() => console.log(wakeLock.released)}>click me</div> */}
             </div>
         </div>
     );
