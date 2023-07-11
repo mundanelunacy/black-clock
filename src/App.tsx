@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export const timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const App: React.FC<{}> = () => {
+    const [time, setTime] = useState(new Date());
+    useEffect(() => {
+        const main = async () => {
+            while (true) {
+                await timeout(1000);
+                setTime(new Date());
+            }
+        };
+        main();
+    }, []);
+
+    const style = {
+        display: "flex",
+        alignItems: "center",
+        height: "100vh",
+        justifyContent: "center",
+        color: "#ffffff",
+    };
+
+    return (
+        <div style={style}>
+            <div style={{}}>
+                <div style={{ fontSize: "3vw" }}>{time.toLocaleDateString()}</div>
+                <div style={{ fontSize: "10vw" }}>{time.toLocaleTimeString()}</div>
+            </div>
+        </div>
+    );
+};
 
 export default App;
