@@ -22,11 +22,6 @@ export const App: React.FC<{}> = () => {
     const [time, setTime] = useState(new Date());
 
     useEffect(() => {
-        const requestWakeLock = async () => {};
-        requestWakeLock();
-    }, []);
-
-    useEffect(() => {
         const main = async () => {
             while (true) {
                 await timeout(1000);
