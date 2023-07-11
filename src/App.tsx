@@ -4,6 +4,30 @@ export const timeout = (ms: number) => new Promise((resolve) => setTimeout(resol
 
 export const App: React.FC<{}> = () => {
     const [time, setTime] = useState(new Date());
+    const [wakeLock, setWakeLock] = useState<any>(null);
+
+    useEffect(() => {
+        const requestWakeLock = async () => {
+            if (!("wakeLock" in navigator)) return;
+            if (!("request" in navigator.wakeLock)) return;
+            try {
+                const temp = await navigator.wakeLock.request("screen");
+                temp.addEventListener("release", () => {
+                    console.log("Screen Wake Lock released:", temp.released);
+                });
+                setWakeLock(temp);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        requestWakeLock();
+
+        return () => {
+            if (wakeLock) wakeLock.release();
+            setWakeLock(null);
+        };
+    });
     useEffect(() => {
         const main = async () => {
             while (true) {
