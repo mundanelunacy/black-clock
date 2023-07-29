@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-
-const timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { useState } from "react";
+import { useInterval } from "./useInterval";
 
 let wakeLock: any = null;
 const screenlock = async () => {
@@ -21,15 +20,7 @@ screenlock();
 export const App: React.FC<{}> = () => {
     const [time, setTime] = useState(new Date());
 
-    useEffect(() => {
-        const main = async () => {
-            while (true) {
-                await timeout(1000);
-                setTime(new Date());
-            }
-        };
-        main();
-    });
+    useInterval(() => setTime(new Date()), 1000);
 
     const style = {
         display: "flex",
@@ -41,7 +32,7 @@ export const App: React.FC<{}> = () => {
 
     return (
         <div style={style}>
-            <div style={{}}>
+            <div>
                 <div style={{ fontSize: "3vw" }}>{time.toLocaleDateString()}</div>
                 <div style={{ fontSize: "10vw" }}>{time.toLocaleTimeString()}</div>
                 {/* <div onClick={() => console.log(wakeLock.released)}>click me</div> */}
