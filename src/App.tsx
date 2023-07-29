@@ -1,41 +1,31 @@
 import { useState } from "react";
 import { useInterval } from "./useInterval";
+import NoSleep from "nosleep.js";
 
-let wakeLock: any = null;
-const screenlock = async () => {
-    if (!("wakeLock" in navigator)) return;
-    if (!("request" in navigator.wakeLock)) return;
-    try {
-        wakeLock = await navigator.wakeLock.request("screen");
-        wakeLock.addEventListener("release", () => {
-            console.log("Screen Wake Lock released:", wakeLock.released);
-        });
-    } catch (err) {
-        console.error(err);
-    }
-};
-
-screenlock();
+const noSleep = new NoSleep();
 
 export const App: React.FC<{}> = () => {
     const [time, setTime] = useState(new Date());
-
     useInterval(() => setTime(new Date()), 1000);
-
-    const style = {
+    const containerStyle: React.CSSProperties = {
         display: "flex",
         alignItems: "center",
         height: "100vh",
         justifyContent: "center",
         color: "#ffffff",
     };
-
+    const dateFontStyle: React.CSSProperties = { fontSize: "5vw" };
+    const timeFontStyle: React.CSSProperties = { fontSize: "15vw" };
+    const noSleepFontStyle: React.CSSProperties = { color: noSleep.isEnabled ? "black" : "white" };
+    const onClick = () => (noSleep.isEnabled ? noSleep.disable() : noSleep.enable());
     return (
-        <div style={style}>
+        <div style={containerStyle}>
             <div>
-                <div style={{ fontSize: "3vw" }}>{time.toLocaleDateString()}</div>
-                <div style={{ fontSize: "10vw" }}>{time.toLocaleTimeString()}</div>
-                {/* <div onClick={() => console.log(wakeLock.released)}>click me</div> */}
+                <div style={dateFontStyle}>{time.toLocaleDateString()}</div>
+                <div style={timeFontStyle}>{time.toLocaleTimeString()}</div>
+                <div style={noSleepFontStyle} onClick={onClick}>
+                    {noSleep.isEnabled ? "disable" : "enable"} no sleep
+                </div>
             </div>
         </div>
     );
