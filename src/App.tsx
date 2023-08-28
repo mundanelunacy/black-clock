@@ -17,12 +17,13 @@ export const App: React.FC<{}> = () => {
     const dateFontStyle: React.CSSProperties = { fontSize: "5vw" };
     const timeFontStyle: React.CSSProperties = { fontSize: "15vw" };
     const noSleepButtonStyle: React.CSSProperties = {
-        color: noSleep.isEnabled ? "black" : "white",
-        border: noSleep.isEnabled ? "" : "1px solid white",
+        color: noSleep.isEnabled ? "transparent" : "white",
+        border: noSleep.isEnabled ? "1px solid transparent" : "1px solid white",
         padding: "5px",
         width: "130px",
         textAlign: "center",
         borderRadius: "5px",
+        backgroundColor: "transparent",
     };
 
     const onClick = () => (noSleep.isEnabled ? noSleep.disable() : noSleep.enable());
@@ -32,9 +33,9 @@ export const App: React.FC<{}> = () => {
             <div>
                 <div style={dateFontStyle}>{time.toLocaleDateString()}</div>
                 <div style={timeFontStyle}>{time.toLocaleTimeString()}</div>
-                <div style={noSleepButtonStyle} onClick={onClick}>
+                <button style={noSleepButtonStyle} onClick={onClick}>
                     {noSleep.isEnabled ? "disable" : "enable"} no sleep
-                </div>
+                </button>
             </div>
         </div>
     );
